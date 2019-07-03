@@ -75,7 +75,7 @@ class Calendar
 	
 	#return false if no events found
 	def print_events_on_month(month, year=2019)
-			print_string = date.day.to_s
+			#print_string = date.day.to_s
 		start_date = Date.new(year, month, 1)
 		end_date = Date.new(year, month, -1)
 		print "\n"
