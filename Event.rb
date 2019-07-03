@@ -1,10 +1,10 @@
 class Event
-
   attr_accessor :description
   attr_reader :id, :date
 
   @@curr_id = 0
 
+  private
   def initialize(description, date)
     @date = date.dup
     @description = description.dup
@@ -20,6 +20,7 @@ class Event
     @@curr_id += 1
   end
 
+  public
   def print_event
     puts "Event id: #{@id}, date: #{@date.day}/#{@date.month}/#{@date.year}"
     puts "description: #{@description}\n\n"
