@@ -57,7 +57,7 @@ class Calendar
 
   def get_eventcount_by_month(date)
     end_date = Date.new(date.year, date.month, -1)
-    date.upto(end_date).inject(0) { |sum, curr_date| sum + get_eventcount_by_date(date) }
+    date.upto(end_date).inject(0) { |sum, curr_date| sum + get_eventcount_by_date(curr_date) }
   end
 
   def print_events_on_date(date)
@@ -76,11 +76,23 @@ class Calendar
     true
   end
 
+  def print_month_header(space_length)
+    print "SUN#{' '*space_length}"
+    print "MON#{' '*space_length}"
+    print "TUE#{' '*space_length}"
+    print "WED#{' '*space_length}"
+    print "THU#{' '*space_length}"
+    print "FRI#{' '*space_length}"
+    puts "SAT#{' '*space_length}"
+  end
+
   def print_month(start_date)
     end_date = Date.new(start_date.year, start_date.month, -1)
-    day_length = 6 # handle dynamically
+    events_in_month = get_eventcount_by_month(start_date)
+    day_length = 5 + events_in_month.to_s.length
+    space_length = day_length - 3
 
-    puts 'SUN   MON   TUE   WED   THU   FRI   SAT'
+    print_month_header(space_length)
     print ' ' * (day_length * start_date.wday)
 
     start_date.upto(end_date).each do |date|
