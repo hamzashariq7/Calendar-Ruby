@@ -8,6 +8,8 @@ class Calendar
     @events = {}
   end
 
+  public
+
   def add_event(description, date)
     if @events.key?(date)
       @events[date] << Event.new(description, date)
@@ -50,32 +52,33 @@ class Calendar
   end
 
   def get_eventcount_by_date(date)
-    get_events_by_date(date).length # correct approach?
+    get_events_by_date(date).length
   end
 
-  def print_events(events)
-    events.each(&:print_event)
+  def get_eventcount_by_month(date)
+    end_date = Date.new(date.year, date.month, -1)
+    date.upto(end_date).inject(0) { |sum, curr_date| sum + get_eventcount_by_date(date) }
   end
-
-  public
 
   def print_events_on_date(date)
+    return false if get_eventcount_by_date(date) == 0
     print "\n"
     print_events(get_events_by_date(date))
+    true
   end
 
   # return false if no events found
   def print_events_on_month(start_date)
-    # print_string = date.day.to_s
-    # start_date = Date.new(year, month, 1)
+    return false if get_eventcount_by_month(start_date) == 0
     end_date = Date.new(start_date.year, start_date.month, -1)
     print "\n"
     start_date.upto(end_date).each { |date| print_events(get_events_by_date(date)) }
+    true
   end
 
   def print_month(start_date)
     end_date = Date.new(start_date.year, start_date.month, -1)
-    day_length = 6
+    day_length = 6 # handle dynamically
 
     puts 'SUN   MON   TUE   WED   THU   FRI   SAT'
     print ' ' * (day_length * start_date.wday)
@@ -91,5 +94,11 @@ class Calendar
     end
 
     print "\n"
+  end
+
+  private
+
+  def print_events(events)
+    events.each(&:print)
   end
 end

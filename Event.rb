@@ -2,14 +2,14 @@ class Event
   attr_accessor :description
   attr_reader :id, :date
 
-  @curr_id = 0
+  @@curr_id = 0
 
   def self.curr_id
-    @curr_id
+    @@curr_id
   end
 
   def self.increment_id
-    @curr_id += 1
+    @@curr_id += 1
   end
 
   private
@@ -23,7 +23,7 @@ class Event
 
   public
 
-  def print_event
+  def print # change name to print
     puts "Event id: #{@id}, date: #{@date.day}/#{@date.month}/#{@date.year}"
     puts "description: #{@description}\n\n"
   end

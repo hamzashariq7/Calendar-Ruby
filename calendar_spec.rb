@@ -10,15 +10,14 @@ describe Calendar do
     end
 
     it 'should add the given event at the correct date' do
-      calendar.add_event(@event.description, @date)
-      expect(calendar.get_events_by_date(@event.date)[0]).to eq @event
+      event_array = calendar.add_event(@event.description, @date) # use return value of this method for testing
+      expect(event_array[0]).to eq @event
     end
 
     it 'should remove an event given its id and date' do
       calendar.add_event(@event.description, @date)
       event_id = calendar.get_events_by_date(@event.date)[0].id
-      calendar.remove_event(event_id, @date)
-      expect(calendar.get_events_by_date(@event.date)[0]).to eq nil
+      expect(calendar.remove_event(event_id, @date)).to be true
     end
 
     it 'should edit the description of an event already added' do
@@ -32,8 +31,8 @@ describe Calendar do
     it 'should be able to add multiple events on the same date' do
       calendar.add_event(@event.description, @date)
       calendar.add_event('Go to university', @date)
-      calendar.add_event('Lunch at KFC', @date)
-      expect(calendar.get_eventcount_by_date(@date)).to eq 3
+      event_array = calendar.add_event('Lunch at KFC', @date)
+      expect(event_array.length).to eq 3
     end
 
     it 'should return an empty array if no events are found on the given date' do

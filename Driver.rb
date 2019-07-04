@@ -13,12 +13,12 @@ class Driver
     puts '7) exit'
   end
 
-  def gets_date
+  def input_date
     print 'Enter date(dd/mm/yyyy): '
     date = gets
     if date !~ %r|\A\d{1,2}/\d{1,2}/\d{4}\Z|
       puts 'Please enter a valid date!'
-      return false, []
+      return nil
     end
 
     date = date.split('/')
@@ -26,17 +26,17 @@ class Driver
       date = Date.new(date[2].to_i, date[1].to_i, date[0].to_i)
     rescue ArgumentError
       puts 'Please enter a valid date!'
-      return false, []
+      return nil
     end
-    [true, date]
+    date
   end
 
-  def gets_month
+  def input_month
     print 'Enter the month with the year(mm/yyyy): '
     date = gets
     if date !~ %r|\A\d{1,2}/\d{4}\Z|
       puts 'Please enter a valid date!'
-      return false, []
+      return nil
     end
 
     date = date.split('/')
@@ -44,12 +44,12 @@ class Driver
       date = Date.new(date[1].to_i, date[0].to_i, 1)
     rescue ArgumentError
       puts 'Please enter a valid date!'
-      return false, []
+      return nil
     end
-    [true, date]
+    date
   end
 
-  def gets_id
+  def input_id
     print 'Enter event id: '
     id = gets
     if id !~ /\A\d+\Z/
@@ -69,27 +69,24 @@ class Driver
 
     until exit_calendar
       print "\nEnter your choice(8 to show all choices): "
-
-      input = gets
-      input.chomp!
+      input = gets.chomp! # can chain chomp
 
       case input
       when '1' # add event
-        valid, date = gets_date
+        date = input_date # can return nil or date
 
-        if valid
+        if date
           print 'Enter event description: '
-          description = gets
-          description.chomp!
+          description = gets.chomp!
 
           my_calendar.add_event(description, date)
           puts 'Event added successfully!'
         end
       when '2'
-        valid, date = gets_date
-        next unless valid
+        date = input_date
+        next unless date
 
-        id = gets_id
+        id = input_id
         next if id < 0
 
         if my_calendar.remove_event(id, date)
@@ -98,15 +95,14 @@ class Driver
           puts 'The event with the given details does not exist!'
         end
       when '3'
-        valid, date = gets_date
+        valid, date = input_date
         next unless valid
 
-        id = gets_id
+        id = input_id
         next if id < 0
 
         print 'Enter new description: '
-        description = gets
-        description.chomp!
+        description = gets.chomp!
 
         if my_calendar.edit_event(id, description, date)
           puts 'Event edited successfully!'
@@ -114,18 +110,26 @@ class Driver
           puts 'The event with the given details does not exist!'
         end
       when '4'
-        valid, date = gets_month
+        date = input_month
 
-        if valid
+        if date
           print "\n"
           my_calendar.print_month(date)
         end
       when '5'
-        valid, date = gets_date
-        my_calendar.print_events_on_date(date) if valid
+        date = input_date
+        if date
+          unless my_calendar.print_events_on_date(date)
+            puts 'No events found on this date!'
+          end
+        end
       when '6'
-        valid, date = gets_month
-        my_calendar.print_events_on_month(date) if valid
+        date = input_month
+        if date
+          unless my_calendar.print_events_on_month(date)
+              puts 'No events found in this month!'
+          end
+        end
       when '7'
         exit_calendar = true
       when '8'
